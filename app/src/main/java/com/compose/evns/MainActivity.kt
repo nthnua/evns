@@ -9,16 +9,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.compose.evns.ui.elements.Message
 import com.compose.evns.ui.elements.MessageCard
 import com.compose.evns.ui.theme.EvnsTheme
+import java.util.Date
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             EvnsTheme {
                 Scaffold() {
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
-                        MessageCard(Message("Admin","Hellooo."))
+                        MessageCard(Message("Admin","Hellooo.",Date().toString()))
                     }
                 }
             }
@@ -43,7 +45,8 @@ fun DefaultPreview() {
                 "Contact details\n" +
                 "Mohith : 70198 99149\n" +
                 "Preeth Jain : 6366299788\n" +
-                "Nishan : 93536 26903"))
+                "Nishan : 93536 26903",
+            time = Date().toString()))
 
     }
 }

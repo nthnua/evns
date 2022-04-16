@@ -7,16 +7,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.evns.R
 
-data class Message(val author:String, val body:String)
+data class Message(val author:String, val body:String,val time:String)
 
 @Composable
 fun MessageCard(msg: Message){
@@ -32,6 +34,8 @@ fun MessageCard(msg: Message){
                 Text("${msg.author}", modifier = Modifier.height(40.dp), fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(20.dp))
                 Text("${msg.body}")
+                Spacer(modifier = Modifier.height(20.dp))
+                Text("${msg.time}", textAlign = TextAlign.End, modifier = Modifier.align(Alignment.End) )
             }
         }
     }
