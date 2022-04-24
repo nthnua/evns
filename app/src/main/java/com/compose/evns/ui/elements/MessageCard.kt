@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.compose.evns.R
 
-data class Message(val author:String, val body:String,val time:String)
+data class Message(val author:String="", val body:String="",val time:String="")
 
 @Composable
 fun MessageCard(msg: Message){

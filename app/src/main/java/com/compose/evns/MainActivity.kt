@@ -1,17 +1,32 @@
 package com.compose.evns
 
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.compose.evns.ui.elements.Message
 import com.compose.evns.ui.elements.MessageCard
 import com.compose.evns.ui.theme.EvnsTheme
+import com.compose.evns.ui.theme.Purple500
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -21,44 +36,25 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val db = Firebase.firestore
+        val OpenForm = mutableStateOf(false)
         setContent {
             EvnsTheme {
                 Scaffold(
                     floatingActionButton = {
                         ExtendedFloatingActionButton(
-                            text = { Text("Add test") },
-                            onClick = {
-                                val user = hashMapOf(
-                                    "first" to "Ada",
-                                    "last" to "Lovelace",
-                                    "born" to 1815
-                                )
-
-                                db.collection("test")
-                                    .add(user)
-                                    .addOnSuccessListener { documentReference ->
-                                        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Toast.makeText(this@MainActivity, "Fail", Toast.LENGTH_SHORT).show()
-                                    }}
+                            text = { Text("Insert") },
+                            onClick =   { OpenForm.value=true
+                                },
+                            backgroundColor = LightGray
                         )
                     },
                 ) {
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
                         //MessageCard(Message("Admin","Hellooo.",Date().toString()))
-                        Button(
-                            onClick = { Fetch(db,this) },
-                            // Uses ButtonDefaults.ContentPadding by default
-                            contentPadding = PaddingValues(
-                                start = 20.dp,
-                                top = 12.dp,
-                                end = 20.dp,
-                                bottom = 12.dp
-                            )){
-                            // Inner content including an icon and a text label
-                            Text("View")
+                        DisplayMessages()
+                        if(OpenForm.value) {
+                            ShowAlertDialog(OpenForm)
                         }
                     }
                 }
@@ -90,15 +86,25 @@ fun DefaultPreview() {
     }
 }
 
-fun Fetch(db : FirebaseFirestore,activity: MainActivity){
-    db.collection("test")
-        .get()
-        .addOnSuccessListener { result ->
-            for (document in result) {
-                Toast.makeText(activity, "${document.id} => ${document.data}", Toast.LENGTH_SHORT).show()
-            }
+@Composable
+fun DisplayMessages(){
+    val context= LocalContext.current
+    val messages= remember { mutableStateListOf(Message())  }
+
+    MsgService.getMsgs(messages)
+    
+    LazyColumn{
+        items(messages){ item :Message ->
+            MessageCard(msg = item)
+            
         }
-        .addOnFailureListener { exception ->
-            Toast.makeText(activity, "Fail", Toast.LENGTH_SHORT).show()
-        }
+
+    }
+}
+
+
+
+fun <T> SnapshotStateList<T>.updateList(newList: List<T>){
+    clear()
+    addAll(newList)
 }
