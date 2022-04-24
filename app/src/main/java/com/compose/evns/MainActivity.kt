@@ -1,26 +1,33 @@
 package com.compose.evns
 
 import android.os.Bundle
+import android.util.Log
+import android.util.Log.DEBUG
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.tooling.preview.Preview
+import com.compose.evns.database.getGroups
+import com.compose.evns.ui.elements.GroupCard
 import com.compose.evns.ui.elements.Message
 import com.compose.evns.ui.elements.MessageCard
+import com.compose.evns.ui.pages.Groups
 import com.compose.evns.ui.theme.EvnsTheme
 import java.util.Date
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
             EvnsTheme {
                 Scaffold() {
                     // A surface container using the 'background' color from the theme
                     Surface(color = MaterialTheme.colors.background) {
-                        MessageCard(Message("Admin","Hellooo.",Date().toString()))
+                        Groups()
                     }
                 }
             }
